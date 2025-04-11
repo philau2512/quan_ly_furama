@@ -3,9 +3,8 @@
 <html>
 <head>
     <title>Furama Resort Management</title>
+    <c:import url="/layout/library.jsp"/>
 
-    <%--    !-- Bootstrap CSS -->--%>
-    <c:import url="layout/library.jsp"/>
     <style>
 
         .container {
@@ -91,15 +90,14 @@
 
 </head>
 <body>
-<%--Header import--%>
-<c:import url="layout/header.jsp"/>
+<c:import url="/layout/header.jsp"/>
 
 <div class="container">
     <div class="sidebar">
         <ul>
-            <li><a href="#">📝 Item One</a></li>
-            <li><a href="#">📋 Item Two</a></li>
-            <li><a href="#">📦 Item Three</a></li>
+            <li><a href="#">📝 Room</a></li>
+            <li><a href="#">📋 House</a></li>
+            <li><a href="#">📦 Villa</a></li>
         </ul>
     </div>
 

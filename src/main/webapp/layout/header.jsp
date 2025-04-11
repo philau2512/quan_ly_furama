@@ -1,13 +1,12 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <html>
 <head>
     <title>Furama Resort Management</title>
-    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome for icons -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
     <style>
         * {
             box-sizing: border-box;
@@ -118,15 +117,22 @@
 
 <header>
     <div class="logo">🏖 Furama Resort</div>
-    <div style="display: flex; align-items: center;">
-        <c:if test="${not empty fn:trim(sessionScope.user.username)}">
-        <div class="username">
-                Welcome, <strong>${sessionScope.user.username}</strong>
-                &nbsp;|&nbsp;
-                <a href="logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
-            </div>
-        </c:if>
+    <div style="display: flex; align-items: center; gap: 10px;">
+        <c:choose>
+            <c:when test="${not empty fn:trim(sessionScope.username)}">
+                <div class="username">
+                    Welcome, <strong>${sessionScope.username}</strong>
+                    &nbsp;|&nbsp;
+                    <a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                </div>
+            </c:when>
 
+            <c:otherwise>
+                <a href="/login"><i class="fas fa-sign-in-alt"></i> Login</a>
+                <span>|</span>
+                <a href="/register"><i class="fas fa-user-plus"></i> Signup</a>
+            </c:otherwise>
+        </c:choose>
     </div>
 </header>
 
@@ -185,4 +191,6 @@
         </form>
     </div>
 </nav>
+<!-- Import modal thông báo -->
+<c:import url="/views/common/notification-modal.jsp"/>
 </html>
