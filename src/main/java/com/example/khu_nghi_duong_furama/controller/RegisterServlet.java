@@ -46,6 +46,8 @@ public class RegisterServlet extends HttpServlet {
         boolean success = userRepository.addNewUser(username, password, roleId);
         if (success) {
             // Đăng ký thành công, chuyển hướng đến trang đăng nhập
+            req.getSession(true).setAttribute("message", "Đăng ký thành công!");
+            req.getSession(true).setAttribute("messageType", "success");
             resp.sendRedirect("login");
         } else {
             // Đăng ký thất bại (username đã tồn tại), hiển thị thông báo lỗi
