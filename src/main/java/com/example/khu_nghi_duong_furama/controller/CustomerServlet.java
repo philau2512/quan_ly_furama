@@ -11,7 +11,25 @@ import java.io.IOException;
 public class CustomerServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.doGet(req, resp);
+        String action = req.getParameter("action");
+        if (action == null) {
+            action = "";
+        }
+        switch (action) {
+            case "add":
+                showAddCustomerForm(req, resp);
+                break;
+            case "edit":
+                break;
+            case "delete":
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void showAddCustomerForm(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.getRequestDispatcher("/views/customer/add.jsp").forward(req, resp);
     }
 
     @Override
