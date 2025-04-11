@@ -95,9 +95,9 @@
 <div class="container">
     <div class="sidebar">
         <ul>
-            <li><a href="#">📝 Item One</a></li>
-            <li><a href="#">📋 Item Two</a></li>
-            <li><a href="#">📦 Item Three</a></li>
+            <li><a href="#">📝 Room</a></li>
+            <li><a href="#">📋 House</a></li>
+            <li><a href="#">📦 Villa</a></li>
         </ul>
     </div>
 

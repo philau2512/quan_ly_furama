@@ -119,11 +119,11 @@
     <div class="logo">🏖 Furama Resort</div>
     <div style="display: flex; align-items: center; gap: 10px;">
         <c:choose>
-            <c:when test="${not empty fn:trim(sessionScope.user.username)}">
+            <c:when test="${not empty fn:trim(sessionScope.username)}">
                 <div class="username">
-                    Welcome, <strong>${sessionScope.user.username}</strong>
+                    Welcome, <strong>${sessionScope.username}</strong>
                     &nbsp;|&nbsp;
-                    <a href="#"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                    <a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
                 </div>
             </c:when>
 
@@ -191,4 +191,6 @@
         </form>
     </div>
 </nav>
+<!-- Import modal thông báo -->
+<c:import url="/views/common/notification-modal.jsp"/>
 </html>

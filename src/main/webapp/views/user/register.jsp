@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -17,39 +18,47 @@
             align-items: center;
             font-family: 'Segoe UI', sans-serif;
         }
+
         .signup-box {
             background: rgba(255, 255, 255, 0.95);
             padding: 40px;
             border-radius: 12px;
             width: 100%;
             max-width: 450px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
         }
+
         .signup-box h2 {
             text-align: center;
             margin-bottom: 30px;
             color: #003366;
         }
-        .form-control {
+
+        .form-control, .form-select {
             border-radius: 8px;
         }
+
         .btn-primary {
             width: 100%;
             border-radius: 8px;
             background-color: #0059b3;
             border: none;
         }
+
         .btn-primary:hover {
             background-color: #003d80;
         }
+
         .text-link {
             text-align: center;
             margin-top: 15px;
         }
+
         .text-link a {
             text-decoration: none;
             color: #0059b3;
         }
+
         .text-link a:hover {
             text-decoration: underline;
         }
@@ -58,10 +67,17 @@
 <body>
 <div class="signup-box">
     <h2>Đăng ký tài khoản</h2>
-    <form action="signup" method="post">
+
+    <c:if test="${not empty error}">
+        <div class="alert alert-danger" role="alert">
+                ${error}
+        </div>
+    </c:if>
+
+    <form action="register" method="post">
         <div class="mb-3">
             <label for="username" class="form-label">Tên đăng nhập</label>
-            <input type="text" class="form-control" id="username" name="username" required>
+            <input type="text" class="form-control" id="username" name="username" value="${username}" required>
         </div>
         <div class="mb-3">
             <label for="password" class="form-label">Mật khẩu</label>
@@ -69,10 +85,10 @@
         </div>
         <div class="mb-3">
             <label for="role" class="form-label">Bạn là</label>
-            <select class="form-select" id="role" name="role" required>
+            <select class="form-select" id="role" name="roleId" required>
                 <option value="">-- Chọn vai trò --</option>
-                <option value="Employee">Nhân viên</option>
-                <option value="Customer">Khách hàng</option>
+                <option value="2" ${roleId == 2 ? 'selected' : ''}>Nhân viên</option>
+                <option value="3" ${roleId == 3 ? 'selected' : ''}>Khách hàng</option>
             </select>
         </div>
         <button type="submit" class="btn btn-primary">Đăng ký</button>

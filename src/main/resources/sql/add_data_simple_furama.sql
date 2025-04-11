@@ -86,12 +86,12 @@ INSERT INTO service_type (service_type_name) VALUES
 
 -- Thêm dữ liệu vào bảng service (Dịch vụ)
 -- Mã dịch vụ DV-XXXX sẽ được định dạng trong JSP/Servlet (DV- + service_id)
-INSERT INTO service (service_name, service_area, service_cost, service_max_people, rent_type_id, service_type_id, standard_room, description_other_convenience, pool_area, number_of_floors, free_service) VALUES 
-('Villa A1', 150, 10000000, 6, 3, 1, 'VIP', 'Free WiFi, Breakfast', 50, 2, NULL),
-('Villa B2', 200, 15000000, 8, 3, 1, 'Luxury', 'Free WiFi, Spa', 70, 3, NULL),
-('House C1', 100, 5000000, 4, 3, 2, 'Standard', 'Free WiFi', NULL, 1, NULL),
-('Room D1', 30, 1500000, 2, 4, 3, 'Normal', 'Free WiFi', NULL, NULL, 'Free Breakfast'),
-('Room E2', 40, 2000000, 3, 4, 3, 'Normal', 'Free WiFi', NULL, NULL, 'Free Drink');
+INSERT INTO service (service_name, service_area, service_cost, service_max_people, rent_type_id, service_type_id, standard_room, description_other_convenience, pool_area, number_of_floors) VALUES 
+('Villa A1', 150, 10000000, 6, 3, 1, 'VIP', 'Free WiFi, Breakfast', 50, 2),
+('Villa B2', 200, 15000000, 8, 3, 1, 'Luxury', 'Free WiFi, Spa', 70, 3),
+('House C1', 100, 5000000, 4, 3, 2, 'Standard', 'Free WiFi', NULL, 1),
+('Room D1', 30, 1500000, 2, 4, 3, 'Normal', 'Free WiFi', NULL, NULL),
+('Room E2', 40, 2000000, 3, 4, 3, 'Normal', 'Free WiFi', NULL, NULL);
 
 -- Thêm dữ liệu vào bảng attach_service (Dịch vụ đi kèm: massage, karaoke, thức ăn, nước uống, thuê xe)
 INSERT INTO attach_service (attach_service_name, attach_service_cost, attach_service_unit, attach_service_status) VALUES 
