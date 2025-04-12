@@ -46,51 +46,51 @@
         <form action="customer?action=add" method="post">
             <div class="mb-3">
                 <label for="name" class="form-label">Họ và tên</label>
-                <input type="text" class="form-control" id="name" name="name" value="${param.name}" required>
+                <input type="text" class="form-control" id="name" name="name" value="${messageType == 'error' ? param.name : ''}" required>
             </div>
 
             <div class="mb-3">
                 <label for="birthday" class="form-label">Ngày sinh</label>
-                <input type="date" class="form-control" id="birthday" name="birthday" value="${param.birthday}" required>
+                <input type="date" class="form-control" id="birthday" name="birthday" value="${messageType == 'error' ? param.birthday : ''}" required>
             </div>
 
             <div class="mb-3">
                 <label class="form-label">Giới tính</label><br>
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="gender" id="male" value="Nam" ${param.gender == 'Nam' || param.gender == null ? 'checked' : ''}>
+                    <input class="form-check-input" type="radio" name="gender" id="male" value="Nam" ${messageType == 'error' && param.gender == 'Nam' || messageType != 'error' ? 'checked' : ''}>
                     <label class="form-check-label" for="male">Nam</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="gender" id="female" value="Nữ" ${param.gender == 'Nữ' ? 'checked' : ''}>
+                    <input class="form-check-input" type="radio" name="gender" id="female" value="Nữ" ${messageType == 'error' && param.gender == 'Nữ' ? 'checked' : ''}>
                     <label class="form-check-label" for="female">Nữ</label>
                 </div>
             </div>
 
             <div class="mb-3">
                 <label for="idCard" class="form-label">Số CMND/CCCD</label>
-                <input type="text" class="form-control" id="idCard" name="idCard" value="${param.idCard}" required>
+                <input type="text" class="form-control" id="idCard" name="idCard" value="${messageType == 'error' ? param.idCard : ''}" required>
             </div>
 
             <div class="mb-3">
                 <label for="phone" class="form-label">Số điện thoại</label>
-                <input type="text" class="form-control" id="phone" name="phone" value="${param.phone}" required>
+                <input type="text" class="form-control" id="phone" name="phone" value="${messageType == 'error' ? param.phone : ''}" required>
             </div>
 
             <div class="mb-3">
                 <label for="email" class="form-label">Email</label>
-                <input type="email" class="form-control" id="email" name="email" value="${param.email}" required>
+                <input type="email" class="form-control" id="email" name="email" value="${messageType == 'error' ? param.email : ''}" required>
             </div>
 
             <div class="mb-3">
                 <label for="address" class="form-label">Địa chỉ</label>
-                <input type="text" class="form-control" id="address" name="address" value="${param.address}" required>
+                <input type="text" class="form-control" id="address" name="address" value="${messageType == 'error' ? param.address : ''}" required>
             </div>
 
             <div class="mb-3">
                 <label for="type" class="form-label">Loại khách hàng</label>
                 <select class="form-select" id="type" name="typeId" required>
                     <c:forEach var="type" items="${customerTypeList}">
-                        <option value="${type.id}" ${param.typeId == type.id ? 'selected' : ''}>${type.name}</option>
+                        <option value="${type.id}" ${messageType == 'error' && param.typeId == type.id ? 'selected' : ''}>${type.name}</option>
                     </c:forEach>
                 </select>
             </div>

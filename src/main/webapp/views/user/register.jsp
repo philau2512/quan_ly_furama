@@ -97,5 +97,14 @@
         </div>
     </form>
 </div>
+
+<!-- Script hiển thị modal thông báo -->
+<script>
+    <c:if test="${not empty message}">
+    showNotificationModal('${message}', '${messageType != null ? messageType : "success"}');
+    <% session.removeAttribute("message"); %>
+    <% session.removeAttribute("messageType"); %>
+    </c:if>
+</script>
 </body>
 </html>

@@ -11,4 +11,10 @@ public interface ICustomerService {
     List<CustomerType> getAllCustomerType();
 
     boolean addNewCustomer(Customer customer);
+
+    boolean deleteCustomer(int customerId);
+
+    boolean updateCustomer(Customer customer);
+
+    Customer getCustomerById(int customerId);
 }

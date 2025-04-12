@@ -16,7 +16,7 @@ public class CustomerRepository implements ICustomerRepository {
     public List<Customer> getAllCustomer() {
         List<Customer> customerList = new ArrayList<>();
         Connection connection = BaseRepository.getConnectDB();
-        String sql = "select * from customer c join customer_type ct on c.customer_type_id = ct.customer_type_id";
+        String sql = "select * from customer c join customer_type ct on c.customer_type_id = ct.customer_type_id order by c.customer_id";
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -75,9 +75,80 @@ public class CustomerRepository implements ICustomerRepository {
             preparedStatement.setString(7, customer.getCustomerEmail());
             preparedStatement.setString(8, customer.getCustomerAddress());
             int rowsAffected = preparedStatement.executeUpdate();
-            return rowsAffected > 0;
+            return rowsAffected == 1;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public boolean deleteCustomer(int customerId) {
+        String sql = "delete from customer where customer_id = ?";
+        Connection connection = BaseRepository.getConnectDB();
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, customerId);
+            int rowsAffected = preparedStatement.executeUpdate();
+            return rowsAffected == 1;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public boolean updateCustomer(Customer customer) {
+        String sql = "UPDATE customer SET customer_type_id = ?, customer_name = ?, customer_birthday = ?, customer_gender = ?, customer_id_card = ?, customer_phone = ?, customer_email = ?, customer_address = ? WHERE customer_id = ?";
+        Connection connection = BaseRepository.getConnectDB();
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, customer.getCustomerType().getId());
+            preparedStatement.setString(2, customer.getCustomerName());
+            preparedStatement.setString(3, customer.getCustomerBirthday());
+            preparedStatement.setBoolean(4, customer.isCustomerGender());
+            preparedStatement.setString(5, customer.getCustomerIdCard());
+            preparedStatement.setString(6, customer.getCustomerPhone());
+            preparedStatement.setString(7, customer.getCustomerEmail());
+            preparedStatement.setString(8, customer.getCustomerAddress());
+            preparedStatement.setInt(9, customer.getCustomerId());
+            int rowsAffected = preparedStatement.executeUpdate();
+            return rowsAffected == 1;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public Customer getCustomerById(int customerId) {
+        String sql = "SELECT c.*, ct.customer_type_name " +
+                "FROM customer c " +
+                "JOIN customer_type ct ON c.customer_type_id = ct.customer_type_id " +
+                "WHERE c.customer_id = ?";
+        Connection connection = BaseRepository.getConnectDB();
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, customerId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                Customer customer = new Customer();
+                customer.setCustomerId(resultSet.getInt("customer_id"));
+                customer.setCustomerName(resultSet.getString("customer_name"));
+                customer.setCustomerBirthday(resultSet.getString("customer_birthday"));
+                customer.setCustomerGender(resultSet.getBoolean("customer_gender"));
+                customer.setCustomerIdCard(resultSet.getString("customer_id_card"));
+                customer.setCustomerPhone(resultSet.getString("customer_phone"));
+                customer.setCustomerEmail(resultSet.getString("customer_email"));
+                customer.setCustomerAddress(resultSet.getString("customer_address"));
+
+                CustomerType customerType = new CustomerType();
+                customerType.setId(resultSet.getInt("customer_type_id"));
+                customerType.setName(resultSet.getString("customer_type_name"));
+                customer.setCustomerType(customerType);
+
+                return customer;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return null;
     }
 }
