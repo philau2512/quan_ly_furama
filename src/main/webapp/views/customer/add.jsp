@@ -105,6 +105,14 @@
 
 <!-- Import modal thông báo -->
 <c:import url="/views/common/notification-modal.jsp"/>
+<!-- Script hiển thị modal thông báo -->
+<script>
+    <c:if test="${not empty message}">
+    showNotificationModal('${message}', '${messageType != null ? messageType : "success"}');
+    <% session.removeAttribute("message"); %>
+    <% session.removeAttribute("messageType"); %>
+    </c:if>
+</script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
