@@ -65,14 +65,4 @@
         const modal = new bootstrap.Modal(document.getElementById('notificationModal'));
         modal.show();
     }
-
-    // Kiểm tra nếu có thông báo từ server (Session hoặc Request)
-    window.onload = function() {
-        <c:if test="${not empty message}">
-        showNotificationModal('${message}', '${messageType != null ? messageType : "success"}');
-        // Xóa thông báo khỏi session sau khi hiển thị
-        <% session.removeAttribute("message"); %>
-        <% session.removeAttribute("messageType"); %>
-        </c:if>
-    };
 </script>
