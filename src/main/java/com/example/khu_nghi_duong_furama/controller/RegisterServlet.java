@@ -2,6 +2,8 @@ package com.example.khu_nghi_duong_furama.controller;
 
 import com.example.khu_nghi_duong_furama.repository.IUserRepository;
 import com.example.khu_nghi_duong_furama.repository.UserRepository;
+import com.example.khu_nghi_duong_furama.service.IUserService;
+import com.example.khu_nghi_duong_furama.service.UserService;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -12,7 +14,7 @@ import java.io.IOException;
 
 @WebServlet(name = "RegisterServlet", urlPatterns = "/register")
 public class RegisterServlet extends HttpServlet {
-    private IUserRepository userRepository = new UserRepository();
+    private IUserService userService = new UserService();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -43,7 +45,7 @@ public class RegisterServlet extends HttpServlet {
         }
 
         // Thêm người dùng mới
-        boolean success = userRepository.addNewUser(username, password, roleId);
+        boolean success = userService.addNewUser(username, password, roleId);
         if (success) {
             // Đăng ký thành công, chuyển hướng đến trang đăng nhập
             req.getSession(true).setAttribute("message", "Đăng ký thành công!");

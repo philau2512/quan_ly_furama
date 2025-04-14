@@ -116,8 +116,6 @@ public class CustomerServlet extends HttpServlet {
             case "edit":
                 updateCustomer(req, resp);
                 break;
-            case "delete":
-                break;
             default:
                 break;
         }

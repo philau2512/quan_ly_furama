@@ -10,4 +10,14 @@ public class UserService implements IUserService {
     public boolean addNewUser(String username, String password, int roleId) {
         return userRepository.addNewUser(username, password, roleId);
     }
+
+    @Override
+    public boolean checkLogin(String username, String password) {
+        return userRepository.checkLogin(username, password);
+    }
+
+    @Override
+    public String getUserRole(String username) {
+        return userRepository.getUserRole(username);
+    }
 }

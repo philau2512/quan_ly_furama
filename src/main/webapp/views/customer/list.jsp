@@ -70,7 +70,7 @@
         <table id="customerTable" class="table table-striped table-bordered">
             <thead class="table-dark">
             <tr>
-                <th>#</th>
+                <th>STT</th>
                 <th>Họ và tên</th>
                 <th>Ngày sinh</th>
                 <th>Giới tính</th>
