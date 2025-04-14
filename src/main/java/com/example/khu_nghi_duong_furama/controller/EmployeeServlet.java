@@ -24,9 +24,9 @@ public class EmployeeServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         // Kiểm tra phân quyền
-//        if (!AuthUtil.isValidRole(req, resp, "Admin")) {
-//            return;
-//        }
+        if (!AuthUtil.isValidRole(req, resp, "Admin")) {
+            return;
+        }
 
         String action = req.getParameter("action");
         if (action == null) {
@@ -104,9 +104,9 @@ public class EmployeeServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         // Kiểm tra phân quyền
-//        if (!AuthUtil.isValidRole(req, resp, "Admin")) {
-//            return;
-//        }
+        if (!AuthUtil.isValidRole(req, resp, "Admin")) {
+            return;
+        }
 
         String action = req.getParameter("action");
         if (action == null) {
