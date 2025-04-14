@@ -57,7 +57,17 @@ public class EmployeeServlet extends HttpServlet {
 
     }
 
-    private void deleteEmployee(HttpServletRequest req, HttpServletResponse resp) {
+    private void deleteEmployee(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        int id = Integer.parseInt(req.getParameter("id"));
+        boolean success = employeeService.deleteEmployee(id);
+        if (success) {
+            req.getSession().setAttribute("message", "Xóa nhân viên thành công !");
+            req.getSession().setAttribute("messageType", "success");
+        } else {
+            req.getSession().setAttribute("message", "Xóa nhân viên thất bại. Vui lòng thử lại.");
+            req.getSession().setAttribute("messageType", "error");
+        }
+        resp.sendRedirect("/employee?action=list");
     }
 
     private void showEmployeeList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -94,8 +104,114 @@ public class EmployeeServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         // Kiểm tra phân quyền
-        if (!AuthUtil.isValidRole(req, resp, "Admin")) {
-            return;
+//        if (!AuthUtil.isValidRole(req, resp, "Admin")) {
+//            return;
+//        }
+
+        String action = req.getParameter("action");
+        if (action == null) {
+            action = "";
         }
+        switch (action) {
+            case "add":
+                addNewEmployee(req, resp);
+                break;
+            case "edit":
+                updateEmployee(req, resp);
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void addNewEmployee(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        int roleId = Integer.parseInt(req.getParameter("roleId"));
+
+        String name = req.getParameter("name");
+        String birthday = req.getParameter("birthday");
+        String idCard = req.getParameter("idCard");
+        double salary = Double.parseDouble(req.getParameter("salary"));
+        String phone = req.getParameter("phone");
+        String email = req.getParameter("email");
+        String address = req.getParameter("address");
+
+        int positionId = Integer.parseInt(req.getParameter("positionId"));
+        String positionName = req.getParameter("positionName");
+
+        int educationDegreeId = Integer.parseInt(req.getParameter("educationDegreeId"));
+        String educationDegreeName = req.getParameter("educationDegreeName");
+
+        int divisionId = Integer.parseInt(req.getParameter("divisionId"));
+        String divisionName = req.getParameter("divisionName");
+
+        String username = req.getParameter("username");
+        String password = req.getParameter("password");
+
+        Employee employee = new Employee();
+        employee.setEmployeeName(name);
+        employee.setEmployeeBirthday(birthday);
+        employee.setEmployeeIdCard(idCard);
+        employee.setEmployeeSalary(salary);
+        employee.setEmployeePhone(phone);
+        employee.setEmployeeEmail(email);
+        employee.setEmployeeAddress(address);
+
+        Position position = new Position(positionId, positionName);
+        EducationDegree educationDegree = new EducationDegree(educationDegreeId, educationDegreeName);
+        Division division = new Division(divisionId, divisionName);
+
+        employee.setPosition(position);
+        employee.setEducationDegree(educationDegree);
+        employee.setDivision(division);
+        employee.setUsername(username);
+
+        boolean success = employeeService.addEmployee(employee, password, roleId);
+        if (success) {
+            req.getSession().setAttribute("message", "Thêm nhân viên thành công!");
+            req.getSession().setAttribute("messageType", "success");
+        } else {
+            req.getSession().setAttribute("message", "Thêm nhân viên thất bại. Vui lòng thử lagi.");
+            req.getSession().setAttribute("messageType", "error");
+        }
+        resp.sendRedirect("/employee?action=list");
+    }
+
+    private void updateEmployee(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        int employeeId = Integer.parseInt(req.getParameter("employeeId"));
+
+        String name = req.getParameter("name");
+        String birthday = req.getParameter("birthday");
+        String idCard = req.getParameter("idCard");
+        double salary = Double.parseDouble(req.getParameter("salary"));
+        String phone = req.getParameter("phone");
+        String email = req.getParameter("email");
+        String address = req.getParameter("address");
+
+        int positionId = Integer.parseInt(req.getParameter("positionId"));
+        int educationDegreeId = Integer.parseInt(req.getParameter("educationDegreeId"));
+        int divisionId = Integer.parseInt(req.getParameter("divisionId"));
+
+        String username = req.getParameter("username");
+
+        Position position = new Position();
+        position.setPositionId(positionId);
+
+        EducationDegree educationDegree = new EducationDegree();
+        educationDegree.setEducationDegreeId(educationDegreeId);
+
+        Division division = new Division();
+        division.setDivisionId(divisionId);
+
+        Employee employee = new Employee(employeeId, name, birthday, idCard, salary, phone, email, address, position, educationDegree, division, username);
+
+        boolean success = employeeService.updateEmployee(employee);
+        if (success) {
+            req.getSession().setAttribute("message", "Chỉnh sửa nhân viên thành công!");
+            req.getSession().setAttribute("messageType", "success");
+        } else {
+            req.getSession().setAttribute("message", "Chỉnh sửa nhân viên thất bại. Vui lòng thử lại.");
+            req.getSession().setAttribute("messageType", "error");
+        }
+        resp.sendRedirect("/employee?action=list");
     }
 }

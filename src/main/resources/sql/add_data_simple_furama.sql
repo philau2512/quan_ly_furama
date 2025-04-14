@@ -43,6 +43,7 @@ INSERT INTO division (division_name) VALUES
 -- Thêm dữ liệu vào bảng user (Người dùng)
 INSERT INTO user (username, password) VALUES 
 ('admin', 'admin123'),
+('nhanvien0', 'nhanvien0'),
 ('nhanvien1', 'pass123'),
 ('nhanvien2', 'pass456'),
 ('nhanvien3', 'pass789'),
@@ -65,7 +66,7 @@ INSERT INTO user_role (role_id, username) VALUES
 -- Thêm dữ liệu vào bảng employee (Nhân viên)
 -- Số điện thoại: 090xxxxxxx hoặc 091xxxxxxx, số CMND: 9 hoặc 12 chữ số, lương: số dương
 INSERT INTO employee (employee_name, employee_birthday, employee_id_card, employee_salary, employee_phone, employee_email, employee_address, position_id, education_degree_id, division_id, username) VALUES 
-('Nguyen Thi Hoa', '1985-02-14', '123123123', 10000000, '0901111111', 'hoa.nguyen@furama.com', 'Da Nang', 1, 3, 1, 'admin'),
+('Nguyen Thi Hoa', '1985-02-14', '123123123', 10000000, '0901111111', 'hoa.nguyen@furama.com', 'Da Nang', 1, 3, 1, 'nhanvien0'),
 ('Tran Van Bao', '1990-06-20', '456456456', 8000000, '0912222222', 'bao.tran@furama.com', 'Quang Nam', 2, 2, 2, 'nhanvien1'),
 ('Le Thi Cam', '1992-09-10', '789789789', 12000000, '(84)+903333333', 'cam.le@furama.com', 'Hue', 3, 4, 3, 'nhanvien2'),
 ('Pham Van Duc', '1988-04-05', '101010101123', 15000000, '0904444444', 'duc.pham@furama.com', 'Da Nang', 4, 4, 4, 'nhanvien3'),

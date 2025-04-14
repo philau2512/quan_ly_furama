@@ -23,8 +23,8 @@ public class EmployeeService implements IEmployeeService {
     }
 
     @Override
-    public boolean addEmployee(Employee employee) {
-        return employeeRepository.addEmployee(employee);
+    public boolean addEmployee(Employee employee, String password, int roleId) {
+        return employeeRepository.addEmployee(employee, password, roleId);
     }
 
     @Override

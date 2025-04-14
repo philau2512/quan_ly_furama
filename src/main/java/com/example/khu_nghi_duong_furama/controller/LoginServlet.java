@@ -2,6 +2,8 @@ package com.example.khu_nghi_duong_furama.controller;
 
 import com.example.khu_nghi_duong_furama.repository.IUserRepository;
 import com.example.khu_nghi_duong_furama.repository.UserRepository;
+import com.example.khu_nghi_duong_furama.service.IUserService;
+import com.example.khu_nghi_duong_furama.service.UserService;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -10,7 +12,7 @@ import java.io.IOException;
 
 @WebServlet(name = "LoginServlet", urlPatterns = "/login")
 public class LoginServlet extends HttpServlet {
-    private IUserRepository userRepository = new UserRepository();
+    private IUserService userService = new UserService();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -42,12 +44,12 @@ public class LoginServlet extends HttpServlet {
         String password = req.getParameter("password");
         String rememberMe = req.getParameter("remember");
 
-        boolean isValid = userRepository.checkLogin(username, password);
+        boolean isValid = userService.checkLogin(username, password);
 
         if (isValid) {
             HttpSession session = req.getSession();
             session.setAttribute("username", username);
-            session.setAttribute("role", userRepository.getUserRole(username));
+            session.setAttribute("role", userService.getUserRole(username));
 
             if ("on".equals(rememberMe)) {
                 Cookie usernameCookie = new Cookie("username", username);

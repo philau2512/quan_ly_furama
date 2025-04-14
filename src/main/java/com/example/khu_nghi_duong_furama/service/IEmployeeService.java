@@ -12,7 +12,7 @@ public interface IEmployeeService {
 
     Employee getEmployeeById(int employeeId);
 
-    boolean addEmployee(Employee employee);
+    boolean addEmployee(Employee employee, String password, int roleId);
 
     boolean updateEmployee(Employee employee);
 
