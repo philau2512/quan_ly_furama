@@ -1,5 +1,6 @@
 package com.example.khu_nghi_duong_furama.controller;
 
+import com.example.khu_nghi_duong_furama.dto.CustomerUsingServiceDTO;
 import com.example.khu_nghi_duong_furama.model.Contract;
 import com.example.khu_nghi_duong_furama.model.Customer;
 import com.example.khu_nghi_duong_furama.model.Employee;
@@ -26,9 +27,9 @@ public class ContractServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         // Kiểm tra phân quyền
-//        if (!AuthUtil.isValidRole(req, resp, "Admin")) {
-//            return;
-//        }
+        if (!AuthUtil.isValidRole(req, resp, "Admin")) {
+            return;
+        }
         String action = req.getParameter("action");
         if (action == null) {
             action = "";
@@ -40,9 +41,18 @@ public class ContractServlet extends HttpServlet {
             case "list":
                 showAllContract(req, resp);
                 break;
+            case "list-customers-using-service":
+                showAllCustomerUsingService(req, resp);
+                break;
             default:
                 break;
         }
+    }
+
+    private void showAllCustomerUsingService(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        List<CustomerUsingServiceDTO> customerUsingServiceList = contractService.getCustomerUsingService();
+        req.setAttribute("customerUsingServiceList", customerUsingServiceList);
+        req.getRequestDispatcher("/views/contract/list_customers_using_service.jsp").forward(req, resp);
     }
 
     private void showAllContract(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -64,9 +74,9 @@ public class ContractServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         // Kiểm tra phân quyền
-//        if (!AuthUtil.isValidRole(req, resp, "Admin")) {
-//            return;
-//        }
+        if (!AuthUtil.isValidRole(req, resp, "Admin")) {
+            return;
+        }
         String action = req.getParameter("action");
         if (action == null) {
             action = "";

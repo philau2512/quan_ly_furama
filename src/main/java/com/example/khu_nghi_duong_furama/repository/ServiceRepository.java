@@ -154,4 +154,134 @@ public class ServiceRepository implements IServiceRepository {
             throw new RuntimeException(e);
         }
     }
+
+    @Override
+    public Service getServiceById(int id) {
+        String sql = "SELECT s.*, st.service_type_name, rt.rent_type_name, rt.rent_type_cost " +
+                "FROM service s " +
+                "JOIN service_type st ON s.service_type_id = st.service_type_id " +
+                "JOIN rent_type rt ON s.rent_type_id = rt.rent_type_id " +
+                "WHERE s.service_id = ?";
+        Connection connection = BaseRepository.getConnectDB();
+        try {
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, id);
+            ResultSet resultSet = stmt.executeQuery();
+            if (resultSet.next()) {
+                System.out.println("Tìm thấy dịch vụ với ID: " + id);
+                Service service;
+
+                int serviceTypeId = resultSet.getInt("service_type_id");
+                if (serviceTypeId == 1) { // Villa
+                    service = new Villa();
+                    ((Villa) service).setStandardRoom(resultSet.getString("standard_room"));
+                    ((Villa) service).setDescriptionOtherConvenience(resultSet.getString("description_other_convenience"));
+                    ((Villa) service).setPoolArea(resultSet.getDouble("pool_area"));
+                    ((Villa) service).setNumberOfFloors(resultSet.getInt("number_of_floors"));
+                } else if (serviceTypeId == 2) { // House
+                    service = new House();
+                    ((House) service).setStandardRoom(resultSet.getString("standard_room"));
+                    ((House) service).setDescriptionOtherConvenience(resultSet.getString("description_other_convenience"));
+                    ((House) service).setNumberOfFloors(resultSet.getInt("number_of_floors"));
+                } else {
+                    service = new Room();
+                    ((Room) service).setFreeServiceIncluded(resultSet.getString("free_service_included"));
+                }
+
+                service.setServiceId(id);
+                service.setServiceName(resultSet.getString("service_name"));
+                service.setServiceArea(resultSet.getDouble("service_area"));
+                service.setServiceCost(resultSet.getDouble("service_cost"));
+                service.setServiceMaxPeople(resultSet.getInt("service_max_people"));
+
+                RentType rentType = new RentType();
+                rentType.setRentTypeId(resultSet.getInt("rent_type_id"));
+                rentType.setRentTypeName(resultSet.getString("rent_type_name"));
+                rentType.setRentTypeCost(resultSet.getDouble("rent_type_cost"));
+                service.setServiceRentType(rentType);
+
+                ServiceType serviceType = new ServiceType();
+                serviceType.setServiceTypeId(serviceTypeId);
+                serviceType.setServiceTypeName(resultSet.getString("service_type_name"));
+                service.setServiceType(serviceType);
+
+                return service;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Lỗi khi lấy dịch vụ theo ID : " + e.getMessage());
+        }
+        return null;
+    }
+
+    @Override
+    public boolean updateService(Service service) {
+        String sql = "UPDATE service SET service_name = ?, service_area = ?, service_cost = ?, service_max_people = ?, " +
+                "rent_type_id = ?, service_type_id = ?, standard_room = ?, description_other_convenience = ?, " +
+                "pool_area = ?, number_of_floors = ?, free_service_included = ? WHERE service_id = ?";
+        Connection connection = BaseRepository.getConnectDB();
+        try {
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setString(1, service.getServiceName());
+            stmt.setDouble(2, service.getServiceArea());
+            stmt.setDouble(3, service.getServiceCost());
+            stmt.setInt(4, service.getServiceMaxPeople());
+            stmt.setInt(5, service.getServiceType().getServiceTypeId());
+            stmt.setInt(6, service.getServiceRentType().getRentTypeId());
+
+            if (service instanceof Villa) {
+                Villa villa = (Villa) service;
+                stmt.setString(7, villa.getStandardRoom());
+                stmt.setString(8, villa.getDescriptionOtherConvenience());
+                stmt.setDouble(9, villa.getPoolArea());
+                stmt.setInt(10, villa.getNumberOfFloors());
+                stmt.setNull(11, Types.VARCHAR);
+            } else if (service instanceof House) {
+                House house = (House) service;
+                stmt.setString(7, house.getStandardRoom());
+                stmt.setString(8, house.getDescriptionOtherConvenience());
+                stmt.setNull(9, Types.DOUBLE); // pool_area không áp dụng cho House
+                stmt.setInt(10, house.getNumberOfFloors());
+                stmt.setNull(11, Types.VARCHAR);
+            } else {
+                Room room = (Room) service;
+                stmt.setNull(7, Types.VARCHAR);
+                stmt.setNull(8, Types.VARCHAR);
+                stmt.setNull(9, Types.DOUBLE);
+                stmt.setNull(10, Types.DOUBLE);
+                stmt.setString(11, room.getFreeServiceIncluded());
+            }
+
+            stmt.setInt(12, service.getServiceId());
+            int effectRows = stmt.executeUpdate();
+            return effectRows > 0;
+        } catch (SQLException e) {
+            throw new RuntimeException("Lỗi khi cập nhật dịch vụ : " + e.getMessage());
+        }
+    }
+
+    @Override
+    public boolean deleteService(int id) {
+        String checkSql = "SELECT COUNT(*) FROM contract WHERE service_id = ?";
+        Connection connection = BaseRepository.getConnectDB();
+        try {
+            PreparedStatement checkStmt = connection.prepareStatement(checkSql);
+            checkStmt.setInt(1, id);
+            ResultSet checkRs = checkStmt.executeQuery();
+            if (checkRs.next() && checkRs.getInt(1) > 0) {
+                throw new SQLException("Không thể xóa dịch vụ vì đang được sử dụng trong hợp đồng!");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        String sql = "DELETE FROM service WHERE service_id = ?";
+        try {
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, id);
+            int effectRows = stmt.executeUpdate();
+            return effectRows > 0;
+        } catch (SQLException e) {
+            throw new RuntimeException("Lỗi khi xóa dịch vụ trong DB : " + e.getMessage());
+        }
+    }
 }

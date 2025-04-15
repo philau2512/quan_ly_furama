@@ -26,18 +26,64 @@ public class ServiceServlet extends HttpServlet {
 
         String action = req.getParameter("action");
         if (action == null) {
-            action = "";
+            action = "list";
         }
         switch (action) {
             case "add":
                 showAddServiceForm(req, resp);
                 break;
-            case "list":
-                showAllService(req, resp);
+            case "edit":
+                showEditServiceForm(req, resp);
+                break;
+            case "delete":
+                deleteService(req, resp);
                 break;
             default:
+                showAllService(req, resp);
                 break;
         }
+    }
+
+    private void deleteService(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        try {
+            int serviceId = Integer.parseInt(req.getParameter("serviceId"));
+            Service service = serviceService.getServiceById(serviceId);
+            if (service == null) {
+                resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Service Not Found");
+                return;
+            }
+            boolean status = serviceService.deleteService(serviceId);
+            if (status) {
+                req.getSession().setAttribute("message", "Xóa dịch vụ " + service.getServiceName() + " thành công!");
+                req.getSession().setAttribute("messageType", "success");
+                resp.sendRedirect("/home");
+            } else {
+                req.getSession().setAttribute("message", "Xóa dịch vụ " + service.getServiceName() + " thất bại!");
+                req.getSession().setAttribute("messageType", "error");
+                resp.sendRedirect("/home");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            req.getSession().setAttribute("message", "Lỗi khi xóa dịch vụ : " + e.getMessage());
+            req.getSession().setAttribute("messageType", "error");
+            resp.sendRedirect("/home");
+        }
+    }
+
+    private void showEditServiceForm(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
+        int serviceId = Integer.parseInt(req.getParameter("serviceId"));
+        Service service = serviceService.getServiceById(serviceId);
+        if (service == null) {
+            resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Service Not Found");
+            return;
+        }
+        req.setAttribute("service", service);
+        List<RentType> rentTypeList = serviceService.getAllRentType();
+        req.setAttribute("rentTypeList", rentTypeList);
+        List<ServiceType> serviceTypeList = serviceService.getAllServiceType();
+        req.setAttribute("serviceTypeList", serviceTypeList);
+
+        req.getRequestDispatcher("/views/service/edit.jsp").forward(req, resp);
     }
 
     private void showAllService(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -72,8 +118,89 @@ public class ServiceServlet extends HttpServlet {
             case "add":
                 addNewService(req, resp);
                 break;
+            case "edit":
+                updateService(req, resp);
+                break;
             default:
                 break;
+        }
+    }
+
+    private void updateService(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        try {
+            int serviceId = Integer.parseInt(req.getParameter("serviceId"));
+            String serviceName = req.getParameter("serviceName");
+            double area = Double.parseDouble(req.getParameter("area"));
+            double cost = Double.parseDouble(req.getParameter("cost"));
+            int maxPeople = Integer.parseInt(req.getParameter("maxPeople"));
+            int rentTypeId = Integer.parseInt(req.getParameter("rentTypeId"));
+            int serviceTypeId = Integer.parseInt(req.getParameter("serviceTypeId"));
+
+            RentType rentType = new RentType();
+            rentType.setRentTypeId(rentTypeId);
+            ServiceType serviceType = new ServiceType();
+            serviceType.setServiceTypeId(serviceTypeId);
+            Service service;
+            if (serviceTypeId == 1) { // Villa
+                String standardRoom = req.getParameter("standardRoom");
+                String descriptionOtherConvenience = req.getParameter("descriptionOtherConvenience");
+                double poolArea = req.getParameter("poolArea") != null && !req.getParameter("poolArea").isEmpty() ? Double.parseDouble(req.getParameter("poolArea")) : 0;
+                int numberOfFloors = req.getParameter("numberOfFloors") != null && !req.getParameter("numberOfFloors").isEmpty() ? Integer.parseInt(req.getParameter("numberOfFloors")) : 0;
+                Villa villa = new Villa();
+                villa.setServiceId(serviceId);
+                villa.setServiceName(serviceName);
+                villa.setServiceArea(area);
+                villa.setServiceCost(cost);
+                villa.setServiceMaxPeople(maxPeople);
+                villa.setServiceRentType(rentType);
+                villa.setServiceType(serviceType);
+                villa.setStandardRoom(standardRoom);
+                villa.setDescriptionOtherConvenience(descriptionOtherConvenience);
+                villa.setPoolArea(poolArea);
+                villa.setNumberOfFloors(numberOfFloors);
+                service = villa;
+            } else if (serviceTypeId == 2) { // House
+                String standardRoom = req.getParameter("standardRoom");
+                String descriptionOtherConvenience = req.getParameter("descriptionOtherConvenience");
+                int numberOfFloors = req.getParameter("numberOfFloors") != null && !req.getParameter("numberOfFloors").isEmpty() ? Integer.parseInt(req.getParameter("numberOfFloors")) : 0;
+                House house = new House();
+                house.setServiceId(serviceId);
+                house.setServiceName(serviceName);
+                house.setServiceArea(area);
+                house.setServiceCost(cost);
+                house.setServiceMaxPeople(maxPeople);
+                house.setServiceRentType(rentType);
+                house.setServiceType(serviceType);
+                house.setStandardRoom(standardRoom);
+                house.setDescriptionOtherConvenience(descriptionOtherConvenience);
+                house.setNumberOfFloors(numberOfFloors);
+                service = house;
+            } else { // Room
+                String freeServiceIncluded = req.getParameter("freeServiceIncluded");
+                Room room = new Room();
+                room.setServiceId(serviceId);
+                room.setServiceName(serviceName);
+                room.setServiceArea(area);
+                room.setServiceCost(cost);
+                room.setServiceMaxPeople(maxPeople);
+                room.setServiceRentType(rentType);
+                room.setServiceType(serviceType);
+                room.setFreeServiceIncluded(freeServiceIncluded);
+                service = room;
+            }
+            boolean status = serviceService.updateService(service);
+            if (status) {
+                req.getSession().setAttribute("message", "Cập nhật dịch vụ " + serviceName + " thành công!");
+                req.getSession().setAttribute("messageType", "success");
+            } else {
+                req.getSession().setAttribute("message", "Cập nhật dịch vụ " + serviceName + " thất bại!");
+                req.getSession().setAttribute("messageType", "error");
+            }
+            resp.sendRedirect("/home");
+        } catch (Exception e) {
+            req.getSession().setAttribute("message", "Lỗi khi cập nhật dịch vụ : " + e.getMessage());
+            req.getSession().setAttribute("messageType", "error");
+            resp.sendRedirect("/home");
         }
     }
 
@@ -150,17 +277,16 @@ public class ServiceServlet extends HttpServlet {
             if (status) {
                 req.getSession().setAttribute("message", "Thêm dịch vụ " + serviceName + " thành công!");
                 req.getSession().setAttribute("messageType", "success");
-                resp.sendRedirect("/service?action=list");
             } else {
                 req.getSession().setAttribute("message", "Them dich vu that bai. Vui long thu lai!");
                 req.getSession().setAttribute("messageType", "error");
-                resp.sendRedirect("/service?action=list");
             }
+            resp.sendRedirect("/home");
         } catch (Exception e) {
             e.printStackTrace();
             req.getSession().setAttribute("message", "Lỗi khi thêm dịch vụ : " + e.getMessage());
             req.getSession().setAttribute("messageType", "error");
-            resp.sendRedirect("/service?action=list");
+            resp.sendRedirect("/home");
         }
     }
 }
