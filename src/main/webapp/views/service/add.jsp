@@ -100,7 +100,8 @@
 
                 <div class="mb-3">
                     <label for="descriptionOtherConvenience" class="form-label">Mô tả tiện nghi khác</label>
-                    <textarea class="form-control" id="descriptionOtherConvenience" name="descriptionOtherConvenience" rows="3">${messageType == 'error' ? param.descriptionOtherConvenience : ''}</textarea>
+                    <textarea class="form-control" id="descriptionOtherConvenience" name="descriptionOtherConvenience"
+                              rows="3">${messageType == 'error' ? param.descriptionOtherConvenience : ''}</textarea>
                 </div>
 
                 <div class="mb-3">
@@ -130,7 +131,7 @@
 
             <div class="d-flex justify-content-between">
                 <button type="submit" class="btn btn-primary">Thêm mới</button>
-                <a href="/service?action=list" class="btn btn-secondary">Hủy</a>
+                <a href="/home" class="btn btn-secondary">Hủy</a>
             </div>
         </form>
     </div>
@@ -171,7 +172,7 @@
     }
 
     // Gọi hàm toggleFields khi trang được tải để hiển thị các trường phù hợp
-    window.onload = function() {
+    window.onload = function () {
         toggleFields();
     };
 </script>
