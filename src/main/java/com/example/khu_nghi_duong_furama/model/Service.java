@@ -1,6 +1,6 @@
 package com.example.khu_nghi_duong_furama.model;
 
-public abstract class Service {
+public class Service {
     private int serviceId;
     private String serviceName;
     private double serviceArea;

@@ -1,9 +1,12 @@
 package com.example.khu_nghi_duong_furama.model;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 public class Contract {
     private int contractId;
-    private String contractStartDate;
-    private String contractEndDate;
+    private LocalDateTime contractStartDate;
+    private LocalDateTime contractEndDate;
     private double contractDeposit;
     private double contractTotalMoney;
     private Employee employee;
@@ -13,7 +16,7 @@ public class Contract {
     public Contract() {
     }
 
-    public Contract(int contractId, String contractStartDate, String contractEndDate, double contractDeposit, double contractTotalMoney, Employee employee, Customer customer, Service service) {
+    public Contract(int contractId, LocalDateTime contractStartDate, LocalDateTime contractEndDate, double contractDeposit, double contractTotalMoney, Employee employee, Customer customer, Service service) {
         this.contractId = contractId;
         this.contractStartDate = contractStartDate;
         this.contractEndDate = contractEndDate;
@@ -32,19 +35,19 @@ public class Contract {
         this.contractId = contractId;
     }
 
-    public String getContractStartDate() {
+    public LocalDateTime getContractStartDate() {
         return contractStartDate;
     }
 
-    public void setContractStartDate(String contractStartDate) {
+    public void setContractStartDate(LocalDateTime contractStartDate) {
         this.contractStartDate = contractStartDate;
     }
 
-    public String getContractEndDate() {
+    public LocalDateTime getContractEndDate() {
         return contractEndDate;
     }
 
-    public void setContractEndDate(String contractEndDate) {
+    public void setContractEndDate(LocalDateTime contractEndDate) {
         this.contractEndDate = contractEndDate;
     }
 
@@ -86,5 +89,14 @@ public class Contract {
 
     public void setService(Service service) {
         this.service = service;
+    }
+
+    // Thêm phương thức định dạng ngày giờ
+    public String getFormattedStartDate() {
+        return contractStartDate.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
+    }
+
+    public String getFormattedEndDate() {
+        return contractEndDate.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
     }
 }
