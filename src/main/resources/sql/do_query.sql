@@ -32,3 +32,17 @@ DELETE FROM user WHERE username = (SELECT username FROM employee WHERE employee_
 -- UPDATE EMPLOYEE -- 
 SELECT * FROM furama_resort.employee;
 update employee set employee_name = ?, employee_birthday = ?, employee_salary = ?, employee_phone = ?, employee_email = ?, employee_address = ?, position_id = ?, education_degree_id = ?, division_id = ? where employee_id = ?;
+
+-- getAllServiceType --
+select * from service_type;
+
+-- getAllRentType -- 
+select * from rent_type;
+
+-- getAllService -- 
+SELECT s.*, st.service_type_id, st.service_type_name, rt.rent_type_id, rt.rent_type_name, rt.rent_type_cost 
+FROM service s 
+JOIN service_type st ON s.service_type_id = st.service_type_id 
+JOIN rent_type rt ON s.rent_type_id = rt.rent_type_id;
+
+
