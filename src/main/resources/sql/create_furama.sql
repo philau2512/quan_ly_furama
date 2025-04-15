@@ -95,6 +95,7 @@ CREATE TABLE service (
     description_other_convenience VARCHAR(45),
     pool_area DOUBLE,
     number_of_floors INT,
+    free_service_included varchar(45),
     FOREIGN KEY (rent_type_id) REFERENCES rent_type(rent_type_id),
     FOREIGN KEY (service_type_id) REFERENCES service_type(service_type_id)
 );
