@@ -51,7 +51,7 @@ FROM contract c
 JOIN employee e ON c.employee_id = e.employee_id
 JOIN customer cu ON c.customer_id = cu.customer_id 
 JOIN service s ON c.service_id = s.service_id
-JOIN service_type st ON s.service_type_id = st.service_type_id;
+JOIN service_type st ON s.service_type_id = st.service_type_id order by c.contract_id;
 
 -- lay danh sach khach hang dang dung dich vu --
 SELECT cu.*, c.*, s.*, st.*

@@ -130,7 +130,13 @@
                 <tr>
                     <td>${loop.count}</td>
                     <td>${employee.employeeName}</td>
-                    <td>${employee.employeeBirthday}</td>
+                    <td>
+                        <c:if test="${not empty employee.employeeBirthday}">
+                            <fmt:parseDate value="${employee.employeeBirthday}" pattern="yyyy-MM-dd"
+                                           var="parsedBirthday"/>
+                            <fmt:formatDate value="${parsedBirthday}" pattern="dd/MM/yyyy"/>
+                        </c:if>
+                    </td>
                     <td>${employee.employeeIdCard}</td>
                     <td><fmt:formatNumber value="${employee.employeeSalary}" type="number" groupingUsed="true"
                                           maxFractionDigits="0"/></td>
