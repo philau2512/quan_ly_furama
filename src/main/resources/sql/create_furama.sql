@@ -1,3 +1,7 @@
+-- Tạo cơ sở dữ liệu
+CREATE DATABASE furama_resort;
+USE furama_resort;
+
 CREATE TABLE customer_type (
     customer_type_id INT PRIMARY KEY AUTO_INCREMENT,
     customer_type_name VARCHAR(45)
@@ -49,7 +53,7 @@ CREATE TABLE employee (
     education_degree_id INT,
     division_id INT,
     username VARCHAR(255),
-    FOREIGN KEY (position_id) REFERENCES position(position_id),
+    FOREIGN KEY (position_id) REFERENCES `position`(position_id),
     FOREIGN KEY (education_degree_id) REFERENCES education_degree(education_degree_id),
     FOREIGN KEY (division_id) REFERENCES division(division_id),
     FOREIGN KEY (username) REFERENCES user(username)
@@ -91,6 +95,7 @@ CREATE TABLE service (
     description_other_convenience VARCHAR(45),
     pool_area DOUBLE,
     number_of_floors INT,
+    free_service_included varchar(45),
     FOREIGN KEY (rent_type_id) REFERENCES rent_type(rent_type_id),
     FOREIGN KEY (service_type_id) REFERENCES service_type(service_type_id)
 );
