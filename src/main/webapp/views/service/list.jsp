@@ -53,7 +53,7 @@
         <table id="serviceTable" class="table table-striped table-bordered">
             <thead class="table-dark">
             <tr>
-                <th>#</th>
+                <th>STT</th>
                 <th>Tên dịch vụ</th>
                 <th>Loại dịch vụ</th>
                 <th>Diện tích (m²)</th>

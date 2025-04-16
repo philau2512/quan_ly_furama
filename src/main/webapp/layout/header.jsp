@@ -147,7 +147,7 @@
             <ul class="dropdown-menu" aria-labelledby="employeeDropdown">
                 <li><a class="dropdown-item" href="employee?action=list">Danh sách nhân viên</a></li>
                 <li><a class="dropdown-item" href="employee?action=add">Thêm nhân viên mới</a></li>
-                <li><a class="dropdown-item" href="employee?action=stats">Thống kê nhân viên</a></li>
+<%--                <li><a class="dropdown-item" href="employee?action=stats">Thống kê nhân viên</a></li>--%>
             </ul>
         </div>
         <div class="dropdown">
@@ -158,7 +158,8 @@
             <ul class="dropdown-menu" aria-labelledby="customerDropdown">
                 <li><a class="dropdown-item" href="customer?action=list">Danh sách khách hàng</a></li>
                 <li><a class="dropdown-item" href="customer?action=add">Thêm khách hàng mới</a></li>
-                <li><a class="dropdown-item" href="customer?action=usingService">Khách hàng đang sử dụng dịch vụ</a>
+                <li><a class="dropdown-item" href="contract?action=list-customers-using-service">Khách hàng đang sử dụng
+                    dịch vụ</a>
                 </li>
             </ul>
         </div>
@@ -170,7 +171,7 @@
             <ul class="dropdown-menu" aria-labelledby="serviceDropdown">
                 <li><a class="dropdown-item" href="service?action=list">Danh sách dịch vụ</a></li>
                 <li><a class="dropdown-item" href="service?action=add">Thêm dịch vụ mới</a></li>
-                <li><a class="dropdown-item" href="service?action=attach">Dịch vụ đi kèm</a></li>
+<%--                <li><a class="dropdown-item" href="service?action=attach">Dịch vụ đi kèm</a></li>--%>
             </ul>
         </div>
         <div class="dropdown">
@@ -181,7 +182,7 @@
             <ul class="dropdown-menu" aria-labelledby="contractDropdown">
                 <li><a class="dropdown-item" href="contract?action=list">Danh sách hợp đồng</a></li>
                 <li><a class="dropdown-item" href="contract?action=add">Thêm hợp đồng mới</a></li>
-                <li><a class="dropdown-item" href="contract?action=addDetail">Thêm chi tiết hợp đồng</a></li>
+                <li><a class="dropdown-item" href="contract-detail?action=add">Thêm chi tiết hợp đồng</a></li>
             </ul>
         </div>
     </div>

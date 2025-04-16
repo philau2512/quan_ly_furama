@@ -12,4 +12,10 @@ public interface IServiceService {
     List<Service> getAllService();
 
     boolean addService(Service service);
+
+    boolean updateService(Service service);
+
+    boolean deleteService(int id);
+
+    Service getServiceById(int id);
 }

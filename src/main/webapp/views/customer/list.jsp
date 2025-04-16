@@ -52,6 +52,11 @@
             display: flex;
             gap: 5px;
         }
+
+        .error {
+            color: red;
+            font-size: 0.9em;
+        }
     </style>
 </head>
 <body>
@@ -87,7 +92,13 @@
                 <tr>
                     <td>${loop.count}</td>
                     <td>${customer.customerName}</td>
-                    <td>${customer.customerBirthday}</td>
+                    <td>
+                        <!-- Chuyển đổi customerBirthday từ String sang Date, rồi định dạng lại -->
+                        <c:if test="${not empty customer.customerBirthday}">
+                            <fmt:parseDate value="${customer.customerBirthday}" pattern="yyyy-MM-dd" var="parsedBirthday"/>
+                            <fmt:formatDate value="${parsedBirthday}" pattern="dd/MM/yyyy"/>
+                        </c:if>
+                    </td>
                     <td>${customer.customerGender ? 'Nam' : 'Nữ'}</td>
                     <td>${customer.customerIdCard}</td>
                     <td>${customer.customerPhone}</td>
@@ -144,7 +155,7 @@
 <!-- Modal Sửa -->
 <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
     <div class="modal-dialog">
-        <form action="/customer?action=edit" method="post">
+        <form action="/customer?action=edit" method="post" onsubmit="return validateEditForm()">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="editModalLabel">Chỉnh sửa khách hàng</h5>
@@ -157,11 +168,14 @@
                     <div class="mb-3">
                         <label for="editName" class="form-label">Họ và tên</label>
                         <input type="text" class="form-control" id="editName" name="name" required>
+                        <div id="editNameError" class="error"></div>
                     </div>
 
                     <div class="mb-3">
                         <label for="editBirthday" class="form-label">Ngày sinh</label>
-                        <input type="date" class="form-control" id="editBirthday" name="birthday" required>
+                        <input type="date" class="form-control" id="editBirthday" name="birthday"
+                               max="${LocalDate.now().toString()}" required>
+                        <div id="editBirthdayError" class="error"></div>
                     </div>
 
                     <div class="mb-3">
@@ -174,26 +188,31 @@
                             <input class="form-check-input" type="radio" name="gender" id="editGenderFemale" value="Nữ">
                             <label class="form-check-label" for="editGenderFemale">Nữ</label>
                         </div>
+                        <div id="editGenderError" class="error"></div>
                     </div>
 
                     <div class="mb-3">
                         <label for="editIdCard" class="form-label">Số CMND/CCCD</label>
                         <input type="text" class="form-control" id="editIdCard" name="idCard" required>
+                        <div id="editIdCardError" class="error"></div>
                     </div>
 
                     <div class="mb-3">
                         <label for="editPhone" class="form-label">Số điện thoại</label>
                         <input type="text" class="form-control" id="editPhone" name="phone" required>
+                        <div id="editPhoneError" class="error"></div>
                     </div>
 
                     <div class="mb-3">
                         <label for="editEmail" class="form-label">Email</label>
                         <input type="email" class="form-control" id="editEmail" name="email" required>
+                        <div id="editEmailError" class="error"></div>
                     </div>
 
                     <div class="mb-3">
                         <label for="editAddress" class="form-label">Địa chỉ</label>
                         <input type="text" class="form-control" id="editAddress" name="address" required>
+                        <div id="editAddressError" class="error"></div>
                     </div>
 
                     <div class="mb-3">
@@ -203,6 +222,7 @@
                                 <option value="${type.id}">${type.name}</option>
                             </c:forEach>
                         </select>
+                        <div id="editTypeError" class="error"></div>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -219,6 +239,8 @@
 <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Import validation.js -->
+<script src="/common/validation.js"></script>
 
 <script>
     // Hàm điền thông tin vào modal xóa
@@ -231,7 +253,7 @@
     function thongTinSua(id, name, birthday, gender, idCard, phone, email, address, typeId) {
         document.getElementById("editId").value = id;
         document.getElementById("editName").value = name;
-        document.getElementById("editBirthday").value = birthday;
+        document.getElementById("editBirthday").value = birthday; // Đảm bảo birthday đã ở định dạng YYYY-MM-DD
         document.getElementById("editGenderMale").checked = (gender === "Nam");
         document.getElementById("editGenderFemale").checked = (gender === "Nữ");
         document.getElementById("editIdCard").value = idCard;
@@ -240,15 +262,103 @@
         document.getElementById("editAddress").value = address;
         document.getElementById("editType").value = typeId;
     }
+
+    // Validate form chỉnh sửa
+    function validateEditForm() {
+        let isValid = true;
+
+        // Validate họ và tên (không rỗng)
+        const name = document.getElementById("editName").value.trim();
+        if (!name) {
+            showError("editNameError", "Họ và tên không được để trống!");
+            isValid = false;
+        } else {
+            clearError("editNameError");
+        }
+
+        // Validate ngày sinh
+        const birthday = document.getElementById("editBirthday").value;
+        if (!birthday) {
+            showError("editBirthdayError", "Ngày sinh không được để trống!");
+            isValid = false;
+        } else {
+            // Kiểm tra ngày sinh có trước ngày hiện tại không
+            const selectedDate = new Date(birthday);
+            const today = new Date();
+            today.setHours(0, 0, 0, 0); // Đặt giờ về 00:00:00 để so sánh chính xác
+            if (selectedDate >= today) {
+                showError("editBirthdayError", "Ngày sinh phải trước ngày hiện tại!");
+                isValid = false;
+            } else {
+                clearError("editBirthdayError");
+            }
+        }
+
+        // Validate giới tính
+        const gender = document.querySelector('input[name="gender"]:checked');
+        if (!gender) {
+            showError("editGenderError", "Vui lòng chọn giới tính!");
+            isValid = false;
+        } else {
+            clearError("editGenderError");
+        }
+
+        // Validate số CMND/CCCD
+        const idCard = document.getElementById("editIdCard").value.trim();
+        if (!validateIdNumber(idCard)) {
+            showError("editIdCardError", "Số CMND/CCCD phải có 9 hoặc 12 chữ số!");
+            isValid = false;
+        } else {
+            clearError("editIdCardError");
+        }
+
+        // Validate số điện thoại
+        const phone = document.getElementById("editPhone").value.trim();
+        if (!validatePhoneNumber(phone)) {
+            showError("editPhoneError", "Số điện thoại phải có định dạng 090xxxxxxx, 091xxxxxxx, (84)+90xxxxxxx hoặc (84)+91xxxxxxx!");
+            isValid = false;
+        } else {
+            clearError("editPhoneError");
+        }
+
+        // Validate email
+        const email = document.getElementById("editEmail").value.trim();
+        if (!validateEmail(email)) {
+            showError("editEmailError", "Email không đúng định dạng!");
+            isValid = false;
+        } else {
+            clearError("editEmailError");
+        }
+
+        // Validate địa chỉ (không rỗng)
+        const address = document.getElementById("editAddress").value.trim();
+        if (!address) {
+            showError("editAddressError", "Địa chỉ không được để trống!");
+            isValid = false;
+        } else {
+            clearError("editAddressError");
+        }
+
+        // Validate loại khách hàng
+        const type = document.getElementById("editType").value;
+        if (!type) {
+            showError("editTypeError", "Vui lòng chọn loại khách hàng!");
+            isValid = false;
+        } else {
+            clearError("editTypeError");
+        }
+
+        return isValid;
+    }
 </script>
 
 <!-- Khởi tạo DataTables -->
 <script>
     $(document).ready(function () {
         $('#customerTable').DataTable({
-            "dom": 'flrtip', // Ẩn thanh tìm kiếm mặc định của DataTables (vì đã có tìm kiếm trong header)
-            "lengthChange": false, // Ẩn tùy chọn thay đổi số lượng bản ghi trên mỗi trang
-            "pageLength": 5, // Số bản ghi trên mỗi trang
+            "dom": 'flrtip',
+            "lengthChange": false,
+            "pageLength": 5,
             "language": {
                 "paginate": {
                     "previous": "«",
@@ -264,7 +374,6 @@
 
 <!-- Script hiển thị modal thông báo -->
 <script>
-    // Gọi trực tiếp thay vì dùng window.onload để tránh xung đột với DataTables
     <c:if test="${not empty message}">
     showNotificationModal('${message}', '${messageType != null ? messageType : "success"}');
     <% session.removeAttribute("message"); %>

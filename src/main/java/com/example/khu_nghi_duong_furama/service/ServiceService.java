@@ -28,4 +28,19 @@ public class ServiceService implements IServiceService {
     public boolean addService(Service service) {
         return serviceRepository.addService(service);
     }
+
+    @Override
+    public boolean updateService(Service service) {
+        return serviceRepository.updateService(service);
+    }
+
+    @Override
+    public boolean deleteService(int id) {
+        return serviceRepository.deleteService(id);
+    }
+
+    @Override
+    public Service getServiceById(int id) {
+        return serviceRepository.getServiceById(id);
+    }
 }

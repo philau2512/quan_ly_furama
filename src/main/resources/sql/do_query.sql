@@ -46,11 +46,29 @@ JOIN service_type st ON s.service_type_id = st.service_type_id
 JOIN rent_type rt ON s.rent_type_id = rt.rent_type_id;
 
 -- getAllContract --
-SELECT c.*, e.employee_name, cu.customer_name, s.service_name, st.service_type_name 
+SELECT c.*, e.employee_id, e.employee_name, cu.customer_id, cu.customer_name, s.service_name, st.*
 FROM contract c 
 JOIN employee e ON c.employee_id = e.employee_id
 JOIN customer cu ON c.customer_id = cu.customer_id 
 JOIN service s ON c.service_id = s.service_id
+JOIN service_type st ON s.service_type_id = st.service_type_id order by c.contract_id;
+
+-- lay danh sach khach hang dang dung dich vu --
+SELECT cu.*, c.*, s.*, st.*
+FROM customer cu
+JOIN contract c ON cu.customer_id = c.customer_id 
+JOIN service s ON c.service_id = s.service_id 
 JOIN service_type st ON s.service_type_id = st.service_type_id;
 
+-- getAttachServicesByContractId --
+SELECT a.* FROM contract_detail cd 
+JOIN attach_service a ON cd.attach_service_id = a.attach_service_id 
+WHERE cd.contract_id = 1;
+
+-- GetServiceById -- 
+SELECT s.*, st.service_type_name, rt.rent_type_name, rt.rent_type_cost 
+FROM service s 
+JOIN service_type st ON s.service_type_id = st.service_type_id 
+JOIN rent_type rt ON s.rent_type_id = rt.rent_type_id 
+WHERE s.service_id = 1;
 

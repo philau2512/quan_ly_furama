@@ -14,4 +14,10 @@ public interface IServiceRepository {
     List<Service> getAllService();
 
     boolean addService(Service service);
+
+    Service getServiceById(int id);
+
+    boolean updateService(Service service);
+
+    boolean deleteService(int id);
 }
